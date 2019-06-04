@@ -1,0 +1,30 @@
+{
+  "name": "drawingboard",
+  "version": "1.0.0",
+  "description": "A canvas drawing board library with Javascript",
+  "main": "index.js",
+  "scripts": {
+    "dev": "gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shaoyishou/drawingBoard.git"
+  },
+  "keywords": [
+    "drawingboard",
+    "canvas",
+    "whiteboard"
+  ],
+  "author": "shaoyishou@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shaoyishou/drawingBoard/issues"
+  },
+  "homepage": "https://github.com/shaoyishou/drawingBoard#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-typescript": "^5.0.1",
+    "typescript": "^3.5.1"
+  }
+}
