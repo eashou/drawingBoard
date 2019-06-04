@@ -23,36 +23,8 @@
   <script>
     var oBoard = document.getElementById('board');
     var el = new DrawingBoard(oBoard, {
-      currentTool: 'font'
+      currentTool: 'text'
     });
-    var oTxt = null;
-    var coord = [];
-
-    oBoard.addEventListener('mousedown', function (ev) {
-      console.log('mousedown');
-      if (oTxt) {
-        el.ctx.fillText(oTxt.value, coord[0], coord[1]);
-        this.parentNode.removeChild(oTxt);
-        oTxt = null;
-      } else {
-        coord = [ev.offsetX, ev.offsetY]
-        oTxt = document.createElement('textarea');
-        oTxt.style.position = 'absolute';
-        oTxt.style.left = coord[0] + 'px';
-        oTxt.style.top = coord[1] + 'px';
-        oTxt.style.border = '1px solid #000';
-        this.parentNode.style.overflow = 'hidden';
-        this.parentNode.appendChild(oTxt);
-      }
-      // el.ctx.font = "48px serif";
-    }, false);
-    oBoard.addEventListener('mouseup', function () {
-      console.log('mouseup');
-      oTxt && oTxt.focus();
-      // el.ctx.strokeText("Hello world", 50, 100);
-      // var text = el.ctx.measureText("foo"); // TextMetrics object
-      // console.log(text.width);
-    }, false);
   </script>
 </body>
 </html>
