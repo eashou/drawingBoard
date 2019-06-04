@@ -19,12 +19,20 @@
   <div class="drawing-board-box">
     <canvas id="board" width="500" height="300"></canvas>
   </div>
+  <button onclick="setPan()">pan</button>
+  <button onclick="setText()">text</button>
   <script src="./dist/drawing-board.js"></script>
   <script>
     var oBoard = document.getElementById('board');
-    var el = new DrawingBoard(oBoard, {
-      currentTool: 'text'
-    });
+    var el = new DrawingBoard(oBoard);
+
+    function setPan () {
+      el.currentTool = 'pan';
+    }
+
+    function setText () {
+      el.currentTool = 'text';
+    }
   </script>
 </body>
 </html>

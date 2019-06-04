@@ -26,7 +26,7 @@ var DrawingBoard = /** @class */ (function () {
         el.addEventListener('mousemove', function (ev) {
             _this.drawing(ev.offsetX, ev.offsetY);
         }, false);
-        el.addEventListener('mouseup', function () {
+        document.addEventListener('mouseup', function () {
             if (_this.currentTool === 'pan') {
                 _this.drawEnd();
             }

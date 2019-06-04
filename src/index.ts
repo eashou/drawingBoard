@@ -31,7 +31,7 @@ class DrawingBoard {
     el.addEventListener('mousemove', ev => {
       this.drawing(ev.offsetX, ev.offsetY)
     }, false);
-    el.addEventListener('mouseup', () => {
+    document.addEventListener('mouseup', () => {
       if (this.currentTool === 'pan') {
         this.drawEnd();
       } else if (this.currentTool === 'text') {
