@@ -1,21 +1,32 @@
 'use strict';
 
+interface ConfigArgs {
+  currentTool: string
+};
+
+const defaultArgs: ConfigArgs = {
+  currentTool: 'pan'
+};
+
 class DrawingBoard {
   ctx: CanvasRenderingContext2D;
   isDrawing: boolean = false;
   shapeList: Array<number[]> = [];
+  currentTool: string = 'pan';
 
-  constructor(el: HTMLCanvasElement) {
+  constructor(el: HTMLCanvasElement, options: ConfigArgs = defaultArgs) {
     this.ctx = el.getContext('2d');
+    this.currentTool = options.currentTool;
 
-
-    el.addEventListener('mousedown', ev => {
-      this.drawStart(ev.offsetX, ev.offsetY)
-    }, false)
-    el.addEventListener('mousemove', ev => {
-      this.drawing(ev.offsetX, ev.offsetY)
-    }, false);
-    el.addEventListener('mouseup', this.drawEnd.bind(this), false);
+    if (this.currentTool === 'pan') {
+      el.addEventListener('mousedown', ev => {
+        this.drawStart(ev.offsetX, ev.offsetY);
+      }, false);
+      el.addEventListener('mousemove', ev => {
+        this.drawing(ev.offsetX, ev.offsetY)
+      }, false);
+      el.addEventListener('mouseup', this.drawEnd.bind(this), false);
+    }
   }
 
   drawStart (x: number, y: number) {
