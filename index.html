@@ -21,40 +21,7 @@
   <script src="./dist/drawing-board.js"></script>
   <script>
     var oBoard = document.getElementById('board');
-    var board = new DrawingBoard(oBoard);
-    var ctx = board.getCtx();
-    ctx.strokeStyle = '#ccc';
-    ctx.lineWidth = 5;
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-    var isDrawing = false;
-    var shapeList = [];
-    oBoard.addEventListener('mousedown', function (ev) {
-      isDrawing = true;
-      shapeList.push([ev.offsetX, ev.offsetY])
-      console.log('mousedown');
-    }, false);
-    oBoard.addEventListener('mousemove', function (ev) {
-      var x = ev.offsetX;
-      var y = ev.offsetY;
-      if (isDrawing) {
-        ctx.beginPath();
-        var i = 0; 
-        for(i in shapeList) {
-          ctx.lineTo(shapeList[i][0],shapeList[i][1]);
-          ctx.moveTo(shapeList[i][0],shapeList[i][1]);
-        }
-        ctx.closePath();
-        ctx.stroke();
-        shapeList.push([x, y])
-        console.log('mousemove');
-      }
-    }, false);
-    oBoard.addEventListener('mouseup', function (ev) {
-      isDrawing = false;
-      shapeList = [];
-      console.log('mouseup');
-    }, false);
+    new DrawingBoard(oBoard);
   </script>
 </body>
 </html>

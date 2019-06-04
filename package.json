@@ -4,7 +4,7 @@
   "description": "A canvas drawing board library with Javascript",
   "main": "index.js",
   "scripts": {
-    "dev": "gulp",
+    "build": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
