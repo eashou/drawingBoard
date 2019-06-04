@@ -21,8 +21,13 @@
 </head>
 <body>
   <div class="drawing-board-box">
-    <canvas></canvas>
+    <canvas id="board"></canvas>
   </div>
   <script src="./dist/drawing-board.js"></script>
+  <script>
+    var oBoard = document.getElementById('board');
+    var board = new DrawingBoard(oBoard);
+    console.log(board.getCtx());
+  </script>
 </body>
 </html>
