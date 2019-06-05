@@ -53,9 +53,10 @@
     }, false);
     oBoard.addEventListener('mousemove', ev => {
       if (isDrawing) {
-        shapeList.forEach(function (shape) {
-          el.ctx.clearRect(shape.x, shape.y, shape.width, shape.height);
-        })
+        var lastShape = shapeList[shapeList.length - 1];
+        if (lastShape) {
+          el.ctx.clearRect(lastShape.x, lastShape.y, lastShape.width, lastShape.height);
+        }
         shapeList.push({
           x: x,
           y: y,
