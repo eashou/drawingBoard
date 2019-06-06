@@ -49,7 +49,6 @@
       isDrawing = true;
       x = ev.offsetX;
       y = ev.offsetY;
-
     }, false);
     oBoard.addEventListener('mousemove', ev => {
       if (isDrawing) {
@@ -63,7 +62,7 @@
           width: ev.offsetX - x,
           height: ev.offsetY - y
         });
-        el.ctx.strokeRect(x, y, ev.offsetX - x, ev.offsetY - y);
+        el.ctx.fillRect(x, y, ev.offsetX - x, ev.offsetY - y);
       }
     }, false);
     document.addEventListener('mouseup', () => {
