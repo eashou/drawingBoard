@@ -29,7 +29,7 @@ class DrawingBoard {
       }
     }, false);
     el.addEventListener('mousemove', ev => {
-      if (this.currentTool === 'pen') {
+      if (this.currentTool === 'pen' || this.currentTool === 'eraser') {
         this.drawing(ev.offsetX, ev.offsetY);
       } else if (this.currentTool === 'rect') {
         this.rect(ev.offsetX, ev.offsetY);
@@ -57,6 +57,9 @@ class DrawingBoard {
     if (this.isDrawing) {
       this.shapeList.push([x, y]);
       this.ctx.beginPath();
+      if (this.currentTool === 'eraser') {
+        this.ctx.globalCompositeOperation = 'destination-out'
+      }
       this.shapeList.forEach((shape: number[]) => {
         this.ctx.lineTo(shape[0], shape[1]);
         this.ctx.moveTo(shape[0], shape[1]);

@@ -24,7 +24,7 @@ var DrawingBoard = /** @class */ (function () {
             }
         }, false);
         el.addEventListener('mousemove', function (ev) {
-            if (_this.currentTool === 'pen') {
+            if (_this.currentTool === 'pen' || _this.currentTool === 'eraser') {
                 _this.drawing(ev.offsetX, ev.offsetY);
             }
             else if (_this.currentTool === 'rect') {
@@ -52,6 +52,9 @@ var DrawingBoard = /** @class */ (function () {
         if (this.isDrawing) {
             this.shapeList.push([x, y]);
             this.ctx.beginPath();
+            if (this.currentTool === 'eraser') {
+                this.ctx.globalCompositeOperation = 'destination-out';
+            }
             this.shapeList.forEach(function (shape) {
                 _this.ctx.lineTo(shape[0], shape[1]);
                 _this.ctx.moveTo(shape[0], shape[1]);
@@ -83,12 +86,8 @@ var DrawingBoard = /** @class */ (function () {
     };
     DrawingBoard.prototype.rect = function (x, y) {
         if (this.isDrawing) {
-            var firstShape = this.shapeList[0];
-            // const lastShape: number[] = this.shapeList[this.shapeList.length - 1];
-            // if (lastShape) {
-            //   this.ctx.clearRect(firstShape[0], firstShape[1], lastShape[0] - firstShape[0], lastShape[1] - firstShape[1]);
-            // }
             this.clear();
+            var firstShape = this.shapeList[0];
             this.shapeList.push([x, y]);
             this.ctx.fillRect(firstShape[0], firstShape[1], x - firstShape[0], y - firstShape[1]);
         }
