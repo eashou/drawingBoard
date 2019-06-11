@@ -22,10 +22,10 @@ class DrawingBoard {
     this.currentTool = options.currentTool;
 
     el.addEventListener('mousedown', ev => {
-      if (this.currentTool === 'pen' || this.currentTool === 'rect') {
-        this.drawStart(ev.offsetX, ev.offsetY);
-      } else if (this.currentTool === 'text') {
+      if (this.currentTool === 'text') {
         this.text(ev.offsetX, ev.offsetY);
+      } else {
+        this.drawStart(ev.offsetX, ev.offsetY);
       }
     }, false);
     el.addEventListener('mousemove', ev => {
@@ -33,15 +33,19 @@ class DrawingBoard {
         this.drawing(ev.offsetX, ev.offsetY);
       } else if (this.currentTool === 'rect') {
         this.rect(ev.offsetX, ev.offsetY);
+      } else if (this.currentTool === 'line') {
+        this.line(ev.offsetX, ev.offsetY);
       }
     }, false);
     document.addEventListener('mouseup', () => {
-      if (this.currentTool === 'pen' || this.currentTool === 'rect') {
+      if (this.currentTool !== 'text') {
         this.drawEnd();
-      } else if (this.currentTool === 'text') {
-
       }
     }, false);
+  }
+
+  clear () {
+    this.ctx.clearRect(0, 0, this.el.width, this.el.height);
   }
 
   drawStart (x: number, y: number) {
@@ -86,13 +90,20 @@ class DrawingBoard {
 
   rect (x: number, y: number) {
     if (this.isDrawing) {
-      const firstShape = this.shapeList[0];
-      const lastShape = this.shapeList[this.shapeList.length - 1];
-      if (lastShape) {
-        this.ctx.clearRect(firstShape[0], firstShape[1], lastShape[0] - firstShape[0], lastShape[1] - firstShape[1]);
-      }
+      this.clear();
+      const firstShape: number[] = this.shapeList[0];
       this.shapeList.push([x, y]);
       this.ctx.fillRect(firstShape[0], firstShape[1], x - firstShape[0], y - firstShape[1]);
+    }
+  }
+
+  line (x: number, y: number) {
+    if (this.isDrawing) {
+      this.clear();
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.shapeList[0][0], this.shapeList[0][1]);
+      this.ctx.lineTo(x, y);
+      this.ctx.stroke();
     }
   }
 }

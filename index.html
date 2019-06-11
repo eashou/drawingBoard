@@ -19,26 +19,20 @@
   <div class="drawing-board-box">
     <canvas id="board" width="500" height="300"></canvas>
   </div>
-  <button onclick="setPan()">pan</button>
-  <button onclick="setText()">text</button>
-  <button onclick="setRect()">rect</button>
+  <button onclick="setTool('pen')">pen</button>
+  <button onclick="setTool('text')">text</button>
+  <button onclick="setTool('rect')">rect</button>
+  <button onclick="setTool('line')">line</button>
+  <button onclick="setTool('eraser')">eraser</button>
   <script src="./dist/drawing-board.js"></script>
   <script>
     var oBoard = document.getElementById('board');
     var el = new DrawingBoard(oBoard, {
-      currentTool: 'rect'
+      currentTool: 'line'
     });
 
-    function setPan () {
-      el.currentTool = 'pen';
-    }
-
-    function setText () {
-      el.currentTool = 'text';
-    }
-
-    function setRect () {
-      el.currentTool = 'rect';
+    function setTool (tool) {
+      el.currentTool = tool || 'pen';
     }
   </script>
 </body>

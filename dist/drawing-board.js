@@ -16,11 +16,11 @@ var DrawingBoard = /** @class */ (function () {
         this.ctx = el.getContext('2d');
         this.currentTool = options.currentTool;
         el.addEventListener('mousedown', function (ev) {
-            if (_this.currentTool === 'pen' || _this.currentTool === 'rect') {
-                _this.drawStart(ev.offsetX, ev.offsetY);
-            }
-            else if (_this.currentTool === 'text') {
+            if (_this.currentTool === 'text') {
                 _this.text(ev.offsetX, ev.offsetY);
+            }
+            else {
+                _this.drawStart(ev.offsetX, ev.offsetY);
             }
         }, false);
         el.addEventListener('mousemove', function (ev) {
@@ -30,15 +30,19 @@ var DrawingBoard = /** @class */ (function () {
             else if (_this.currentTool === 'rect') {
                 _this.rect(ev.offsetX, ev.offsetY);
             }
+            else if (_this.currentTool === 'line') {
+                _this.line(ev.offsetX, ev.offsetY);
+            }
         }, false);
         document.addEventListener('mouseup', function () {
-            if (_this.currentTool === 'pen' || _this.currentTool === 'rect') {
+            if (_this.currentTool !== 'text') {
                 _this.drawEnd();
-            }
-            else if (_this.currentTool === 'text') {
             }
         }, false);
     }
+    DrawingBoard.prototype.clear = function () {
+        this.ctx.clearRect(0, 0, this.el.width, this.el.height);
+    };
     DrawingBoard.prototype.drawStart = function (x, y) {
         this.isDrawing = true;
         this.shapeList.push([x, y]);
@@ -80,12 +84,22 @@ var DrawingBoard = /** @class */ (function () {
     DrawingBoard.prototype.rect = function (x, y) {
         if (this.isDrawing) {
             var firstShape = this.shapeList[0];
-            var lastShape = this.shapeList[this.shapeList.length - 1];
-            if (lastShape) {
-                this.ctx.clearRect(firstShape[0], firstShape[1], lastShape[0] - firstShape[0], lastShape[1] - firstShape[1]);
-            }
+            // const lastShape: number[] = this.shapeList[this.shapeList.length - 1];
+            // if (lastShape) {
+            //   this.ctx.clearRect(firstShape[0], firstShape[1], lastShape[0] - firstShape[0], lastShape[1] - firstShape[1]);
+            // }
+            this.clear();
             this.shapeList.push([x, y]);
             this.ctx.fillRect(firstShape[0], firstShape[1], x - firstShape[0], y - firstShape[1]);
+        }
+    };
+    DrawingBoard.prototype.line = function (x, y) {
+        if (this.isDrawing) {
+            this.clear();
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.shapeList[0][0], this.shapeList[0][1]);
+            this.ctx.lineTo(x, y);
+            this.ctx.stroke();
         }
     };
     return DrawingBoard;
