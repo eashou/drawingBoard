@@ -1,7 +1,7 @@
 'use strict';
 ;
 var defaultArgs = {
-    currentTool: 'pan'
+    currentTool: 'pen'
 };
 var DrawingBoard = /** @class */ (function () {
     function DrawingBoard(el, options) {
@@ -10,13 +10,13 @@ var DrawingBoard = /** @class */ (function () {
         this.el = null;
         this.isDrawing = false;
         this.shapeList = [];
-        this.currentTool = 'pan';
+        this.currentTool = 'pen';
         this.txtInput = null;
         this.el = el;
         this.ctx = el.getContext('2d');
         this.currentTool = options.currentTool;
         el.addEventListener('mousedown', function (ev) {
-            if (_this.currentTool === 'pan') {
+            if (_this.currentTool === 'pen' || _this.currentTool === 'rect') {
                 _this.drawStart(ev.offsetX, ev.offsetY);
             }
             else if (_this.currentTool === 'text') {
@@ -24,10 +24,15 @@ var DrawingBoard = /** @class */ (function () {
             }
         }, false);
         el.addEventListener('mousemove', function (ev) {
-            _this.drawing(ev.offsetX, ev.offsetY);
+            if (_this.currentTool === 'pen') {
+                _this.drawing(ev.offsetX, ev.offsetY);
+            }
+            else if (_this.currentTool === 'rect') {
+                _this.rect(ev.offsetX, ev.offsetY);
+            }
         }, false);
         document.addEventListener('mouseup', function () {
-            if (_this.currentTool === 'pan') {
+            if (_this.currentTool === 'pen' || _this.currentTool === 'rect') {
                 _this.drawEnd();
             }
             else if (_this.currentTool === 'text') {
@@ -70,6 +75,17 @@ var DrawingBoard = /** @class */ (function () {
             this.txtInput.style.top = y + 'px';
             this.txtInput.style.border = '1px solid #000';
             this.el.parentNode.appendChild(this.txtInput);
+        }
+    };
+    DrawingBoard.prototype.rect = function (x, y) {
+        if (this.isDrawing) {
+            var firstShape = this.shapeList[0];
+            var lastShape = this.shapeList[this.shapeList.length - 1];
+            if (lastShape) {
+                this.ctx.clearRect(firstShape[0], firstShape[1], lastShape[0] - firstShape[0], lastShape[1] - firstShape[1]);
+            }
+            this.shapeList.push([x, y]);
+            this.ctx.fillRect(firstShape[0], firstShape[1], x - firstShape[0], y - firstShape[1]);
         }
     };
     return DrawingBoard;

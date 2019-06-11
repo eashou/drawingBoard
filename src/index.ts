@@ -5,7 +5,7 @@ interface ConfigArgs {
 };
 
 const defaultArgs: ConfigArgs = {
-  currentTool: 'pan'
+  currentTool: 'pen'
 };
 
 class DrawingBoard {
@@ -13,7 +13,7 @@ class DrawingBoard {
   ctx: CanvasRenderingContext2D;
   isDrawing: boolean = false;
   shapeList: Array<number[]> = [];
-  currentTool: string = 'pan';
+  currentTool: string = 'pen';
   txtInput: HTMLTextAreaElement = null;
 
   constructor(el: HTMLCanvasElement, options: ConfigArgs = defaultArgs) {
@@ -22,17 +22,21 @@ class DrawingBoard {
     this.currentTool = options.currentTool;
 
     el.addEventListener('mousedown', ev => {
-      if (this.currentTool === 'pan') {
+      if (this.currentTool === 'pen' || this.currentTool === 'rect') {
         this.drawStart(ev.offsetX, ev.offsetY);
       } else if (this.currentTool === 'text') {
         this.text(ev.offsetX, ev.offsetY);
       }
     }, false);
     el.addEventListener('mousemove', ev => {
-      this.drawing(ev.offsetX, ev.offsetY)
+      if (this.currentTool === 'pen') {
+        this.drawing(ev.offsetX, ev.offsetY);
+      } else if (this.currentTool === 'rect') {
+        this.rect(ev.offsetX, ev.offsetY);
+      }
     }, false);
     document.addEventListener('mouseup', () => {
-      if (this.currentTool === 'pan') {
+      if (this.currentTool === 'pen' || this.currentTool === 'rect') {
         this.drawEnd();
       } else if (this.currentTool === 'text') {
 
@@ -77,6 +81,18 @@ class DrawingBoard {
       this.txtInput.style.top = y + 'px';
       this.txtInput.style.border = '1px solid #000';
       this.el.parentNode.appendChild(this.txtInput);
+    }
+  }
+
+  rect (x: number, y: number) {
+    if (this.isDrawing) {
+      const firstShape = this.shapeList[0];
+      const lastShape = this.shapeList[this.shapeList.length - 1];
+      if (lastShape) {
+        this.ctx.clearRect(firstShape[0], firstShape[1], lastShape[0] - firstShape[0], lastShape[1] - firstShape[1]);
+      }
+      this.shapeList.push([x, y]);
+      this.ctx.fillRect(firstShape[0], firstShape[1], x - firstShape[0], y - firstShape[1]);
     }
   }
 }
