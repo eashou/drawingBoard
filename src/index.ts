@@ -112,7 +112,6 @@ class Txt {
   }
 }
 
-
 interface ConfigArgs {
   currentTool: string
 };
@@ -143,19 +142,17 @@ class DrawingBoard {
     el.addEventListener('mousemove', ev => {
       this.drawing(ev.offsetX, ev.offsetY);
     }, false);
-    document.addEventListener('mouseup', ev => {
-      this.drawEnd(ev.offsetX, ev.offsetY);
-    }, false);
+    document.addEventListener('mouseup', this.drawEnd.bind(this), false);
   }
 
   generatePoint (x: number, y: number, size?: number, color?: string) {
-    size = size || 5
-    color = color || 'red'
-    return new Point(x, y, size, color)
+    size = size || 5;
+    color = color || 'red';
+    return new Point(x, y, size, color);
   }
 
   createTxtInput (start: Point) {
-    if (this.txtInput) return
+    if (this.txtInput) return;
     this.txtInput = document.createElement('textarea');
     this.txtInput.style.position = 'absolute';
     this.txtInput.style.left = start.x + 'px';
@@ -191,28 +188,28 @@ class DrawingBoard {
     this.isDrawing = true;
     this.pointList.push(this.generatePoint(x, y));
     if (this.currentTool === 'text') {
-      this.createTxtInput(this.pointList[this.pointList.length - 1])
+      this.createTxtInput(this.pointList[this.pointList.length - 1]);
     }
   }
 
   drawing (x: number, y: number) {
-    if (!this.isDrawing) return
+    if (!this.isDrawing) return;
     this.init();
     const start: Point = this.pointList[0];
     const end: Point = this.generatePoint(x, y);
     this.pointList.push(end);
     if (this.currentTool === 'pencil') {
-      this.shape = new Pencil(this.ctx, this.pointList)
+      this.shape = new Pencil(this.ctx, this.pointList);
     } else if (this.currentTool === 'eraser') {
-      this.shape = new Eraser(this.ctx, this.pointList)
+      this.shape = new Eraser(this.ctx, this.pointList);
     } else if (this.currentTool === 'line') {
-      this.shape = new Line(this.ctx, start, this.generatePoint(x, y))
+      this.shape = new Line(this.ctx, start, end);
     } else if (this.currentTool === 'rect') {
       this.shape = new Rect(this.ctx, start, x - start.x, y - start.y);
     }
   }
 
-  drawEnd (x: number, y: number) {
+  drawEnd () {
     this.isDrawing && this.shape && this.shapeList.push(this.shape);
     this.pointList = [];
     this.isDrawing = false;

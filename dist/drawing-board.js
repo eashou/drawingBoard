@@ -124,9 +124,7 @@ var DrawingBoard = /** @class */ (function () {
         el.addEventListener('mousemove', function (ev) {
             _this_1.drawing(ev.offsetX, ev.offsetY);
         }, false);
-        document.addEventListener('mouseup', function (ev) {
-            _this_1.drawEnd(ev.offsetX, ev.offsetY);
-        }, false);
+        document.addEventListener('mouseup', this.drawEnd.bind(this), false);
     }
     DrawingBoard.prototype.generatePoint = function (x, y, size, color) {
         size = size || 5;
@@ -185,13 +183,13 @@ var DrawingBoard = /** @class */ (function () {
             this.shape = new Eraser(this.ctx, this.pointList);
         }
         else if (this.currentTool === 'line') {
-            this.shape = new Line(this.ctx, start, this.generatePoint(x, y));
+            this.shape = new Line(this.ctx, start, end);
         }
         else if (this.currentTool === 'rect') {
             this.shape = new Rect(this.ctx, start, x - start.x, y - start.y);
         }
     };
-    DrawingBoard.prototype.drawEnd = function (x, y) {
+    DrawingBoard.prototype.drawEnd = function () {
         this.isDrawing && this.shape && this.shapeList.push(this.shape);
         this.pointList = [];
         this.isDrawing = false;
