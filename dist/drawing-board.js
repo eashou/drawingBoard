@@ -32,8 +32,8 @@ var Line = /** @class */ (function () {
         this.ctx.beginPath();
         this.ctx.moveTo(this.start.x, this.start.y);
         this.ctx.lineTo(this.end.x, this.end.y);
-        this.ctx.lineWidth = this.start.size;
-        this.ctx.strokeStyle = this.start.color;
+        this.ctx.lineWidth = this.end.size;
+        this.ctx.strokeStyle = this.end.color;
         this.ctx.stroke();
         this.ctx.save();
     };

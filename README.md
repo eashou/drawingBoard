@@ -31,7 +31,7 @@ The goal is to implement a canvas drawing board library with Javascript
 
 ## Demo
 Please click [here](./index.html)
----
+
 ![demo](./demo.gif)
 
 ## License
