@@ -1,116 +1,11 @@
 'use strict';
 
-class Point {
-  x: number;
-  y: number;
-  size: number;
-  color: string;
-
-  constructor (x: number, y: number, size: number, color: string) {
-    this.x = x;
-    this.y = y;
-    this.size = size;
-    this.color = color;
-  }
-}
-
-class Line {
-  ctx: CanvasRenderingContext2D;
-  start: Point;
-  end: Point;
-
-  constructor (ctx: CanvasRenderingContext2D, start: Point, end: Point) {
-    this.ctx = ctx;
-    this.start = start;
-    this.end = end;
-    this.draw();
-  }
-
-  draw () {
-    this.ctx.beginPath();
-    this.ctx.moveTo(this.start.x, this.start.y);
-    this.ctx.lineTo(this.end.x, this.end.y);
-    this.ctx.lineWidth = this.end.size;
-    this.ctx.strokeStyle = this.end.color;
-    this.ctx.stroke();
-    this.ctx.save();
-  }
-}
-
-class Pencil {
-  ctx: CanvasRenderingContext2D;
-  PointList: Array<Point>;
-
-  constructor (ctx: CanvasRenderingContext2D, PointList: Array<Point>) {
-    this.ctx = ctx;
-    this.PointList = PointList;
-    this.draw()
-  }
-
-  draw () {
-    this.PointList.forEach((point, index) => {
-      const lastPoint = this.PointList[index - 1];
-      lastPoint && new Line(this.ctx, lastPoint, point);
-    })
-  }
-}
-
-class Eraser extends Pencil {
-  constructor (ctx: CanvasRenderingContext2D, PointList: Array<Point>) {
-    super(ctx, PointList);
-    this.draw();
-  }
-
-  draw () {
-    this.ctx.globalCompositeOperation = 'destination-out';
-    super.draw();
-    this.ctx.globalCompositeOperation = 'source-over';
-  }
-}
-
-class Rect {
-  ctx: CanvasRenderingContext2D;
-  start: Point;
-  width: number;
-  height: number;
-  bgColor: string;
-
-  constructor (ctx: CanvasRenderingContext2D, start: Point, width: number, height: number, bgColor?: string) {
-    this.ctx = ctx;
-    this.start = start;
-    this.width = width;
-    this.height = height;
-    this.bgColor = bgColor;
-    this.draw();
-  }
-
-  draw () {
-    this.ctx.lineWidth = this.start.size;
-    this.ctx.strokeStyle = this.start.color;
-    if (this.bgColor) {
-      this.ctx.fillStyle = this.bgColor;
-      this.ctx.fillRect(this.start.x, this.start.y, this.width, this.height);
-    }
-    this.ctx.strokeRect(this.start.x, this.start.y, this.width, this.height);
-  }
-}
-
-class Txt {
-  ctx: CanvasRenderingContext2D;
-  start: Point;
-  text: string;
-
-  constructor (ctx: CanvasRenderingContext2D, start: Point, text: string) {
-    this.ctx = ctx;
-    this.start = start;
-    this.text = text;
-    this.draw();
-  }
-
-  draw () {
-    this.ctx.fillText(this.text, this.start.x, this.start.y);
-  }
-}
+import Point from './tools/Point';
+import Line from './tools/Line';
+import Pencil from './tools/Pencil';
+import Eraser from './tools/Eraser';
+import Rect from './tools/Rect';
+import Text from './tools/Text';
 
 interface ConfigArgs {
   currentTool: string
@@ -119,15 +14,14 @@ interface ConfigArgs {
 const defaultArgs: ConfigArgs = {
   currentTool: 'pencil'
 };
-
 class DrawingBoard {
   el: HTMLCanvasElement = null;
   txtInput: HTMLTextAreaElement = null;
   ctx: CanvasRenderingContext2D;
   isDrawing: boolean = false;
   pointList: Array<Point> = [];
-  shape: Line|Pencil|Eraser|Rect|Txt;
-  shapeList: Array<Line|Pencil|Eraser|Rect|Txt> = [];
+  shape: Line|Pencil|Eraser|Rect|Text;
+  shapeList: Array<Line|Pencil|Eraser|Rect|Text> = [];
   currentTool: string = 'pencil';
 
   constructor(el: HTMLCanvasElement, options: ConfigArgs = defaultArgs) {
@@ -169,7 +63,7 @@ class DrawingBoard {
         _this.txtInput.removeEventListener('blur', onBlur, false);
         _this.txtInput = null;
         if (text) {
-          _this.shapeList.push(new Txt(_this.ctx, start, text));
+          _this.shapeList.push(new Text(_this.ctx, start, text));
         }
       }
       _this.txtInput.addEventListener('blur', onBlur, false);
@@ -217,3 +111,5 @@ class DrawingBoard {
     console.log(this.shapeList);
   }
 }
+
+module.exports = DrawingBoard;
