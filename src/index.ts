@@ -8,11 +8,16 @@ import Rect from './tools/Rect';
 import Text from './tools/Text';
 
 interface ConfigArgs {
-  currentTool: string
+  currentTool?: string,
+  size?: number,
+  color?: string,
+  fillColor?: string
 };
 
 const defaultArgs: ConfigArgs = {
-  currentTool: 'pencil'
+  currentTool: 'pencil',
+  size: 5,
+  color: 'black'
 };
 class DrawingBoard {
   el: HTMLCanvasElement = null;
@@ -22,12 +27,18 @@ class DrawingBoard {
   pointList: Array<Point> = [];
   shape: Line|Pencil|Eraser|Rect|Text;
   shapeList: Array<Line|Pencil|Eraser|Rect|Text> = [];
-  currentTool: string = 'pencil';
+  currentTool: string;
+  size: number;
+  color: string;
+  fillColor: string;
 
   constructor(el: HTMLCanvasElement, options: ConfigArgs = defaultArgs) {
     this.el = el;
     this.ctx = el.getContext('2d');
     this.currentTool = options.currentTool;
+    this.size = options.size;
+    this.color = options.color;
+    this.fillColor = options.fillColor;
     this.init();
 
     el.addEventListener('mousedown', ev => {
@@ -39,10 +50,20 @@ class DrawingBoard {
     document.addEventListener('mouseup', this.drawEnd.bind(this), false);
   }
 
-  generatePoint (x: number, y: number, size?: number, color?: string) {
-    size = size || 5;
-    color = color || 'red';
-    return new Point(x, y, size, color);
+  setTool (tool: string = 'pencil') {
+    this.currentTool = tool
+  }
+
+  setSize (size: number = 5) {
+    this.size = size
+  }
+
+  setColor (color: string = 'black') {
+    this.color = color
+  }
+
+  setFillColor (color: string) {
+    this.fillColor = color
   }
 
   createTxtInput (start: Point) {
@@ -80,7 +101,7 @@ class DrawingBoard {
 
   drawStart (x: number, y: number) {
     this.isDrawing = true;
-    this.pointList.push(this.generatePoint(x, y));
+    this.pointList.push(new Point(x, y, this.size, this.color));
     if (this.currentTool === 'text') {
       this.createTxtInput(this.pointList[this.pointList.length - 1]);
     }
@@ -90,7 +111,7 @@ class DrawingBoard {
     if (!this.isDrawing) return;
     this.init();
     const start: Point = this.pointList[0];
-    const end: Point = this.generatePoint(x, y);
+    const end: Point = new Point(x, y, this.size, this.color);
     this.pointList.push(end);
     if (this.currentTool === 'pencil') {
       this.shape = new Pencil(this.ctx, this.pointList);
@@ -99,7 +120,7 @@ class DrawingBoard {
     } else if (this.currentTool === 'line') {
       this.shape = new Line(this.ctx, start, end);
     } else if (this.currentTool === 'rect') {
-      this.shape = new Rect(this.ctx, start, x - start.x, y - start.y);
+      this.shape = new Rect(this.ctx, start, x - start.x, y - start.y, this.fillColor);
     }
   }
 

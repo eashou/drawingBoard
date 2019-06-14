@@ -9,7 +9,9 @@ var Rect_1 = require("./tools/Rect");
 var Text_1 = require("./tools/Text");
 ;
 var defaultArgs = {
-    currentTool: 'pencil'
+    currentTool: 'pencil',
+    size: 5,
+    color: 'black'
 };
 var DrawingBoard = /** @class */ (function () {
     function DrawingBoard(el, options) {
@@ -20,10 +22,12 @@ var DrawingBoard = /** @class */ (function () {
         this.isDrawing = false;
         this.pointList = [];
         this.shapeList = [];
-        this.currentTool = 'pencil';
         this.el = el;
         this.ctx = el.getContext('2d');
         this.currentTool = options.currentTool;
+        this.size = options.size;
+        this.color = options.color;
+        this.fillColor = options.fillColor;
         this.init();
         el.addEventListener('mousedown', function (ev) {
             _this_1.drawStart(ev.offsetX, ev.offsetY);
@@ -33,10 +37,20 @@ var DrawingBoard = /** @class */ (function () {
         }, false);
         document.addEventListener('mouseup', this.drawEnd.bind(this), false);
     }
-    DrawingBoard.prototype.generatePoint = function (x, y, size, color) {
-        size = size || 5;
-        color = color || 'red';
-        return new Point_1["default"](x, y, size, color);
+    DrawingBoard.prototype.setTool = function (tool) {
+        if (tool === void 0) { tool = 'pencil'; }
+        this.currentTool = tool;
+    };
+    DrawingBoard.prototype.setSize = function (size) {
+        if (size === void 0) { size = 5; }
+        this.size = size;
+    };
+    DrawingBoard.prototype.setColor = function (color) {
+        if (color === void 0) { color = 'black'; }
+        this.color = color;
+    };
+    DrawingBoard.prototype.setFillColor = function (color) {
+        this.fillColor = color;
     };
     DrawingBoard.prototype.createTxtInput = function (start) {
         if (this.txtInput)
@@ -71,7 +85,7 @@ var DrawingBoard = /** @class */ (function () {
     };
     DrawingBoard.prototype.drawStart = function (x, y) {
         this.isDrawing = true;
-        this.pointList.push(this.generatePoint(x, y));
+        this.pointList.push(new Point_1["default"](x, y, this.size, this.color));
         if (this.currentTool === 'text') {
             this.createTxtInput(this.pointList[this.pointList.length - 1]);
         }
@@ -81,7 +95,7 @@ var DrawingBoard = /** @class */ (function () {
             return;
         this.init();
         var start = this.pointList[0];
-        var end = this.generatePoint(x, y);
+        var end = new Point_1["default"](x, y, this.size, this.color);
         this.pointList.push(end);
         if (this.currentTool === 'pencil') {
             this.shape = new Pencil_1["default"](this.ctx, this.pointList);
@@ -93,7 +107,7 @@ var DrawingBoard = /** @class */ (function () {
             this.shape = new Line_1["default"](this.ctx, start, end);
         }
         else if (this.currentTool === 'rect') {
-            this.shape = new Rect_1["default"](this.ctx, start, x - start.x, y - start.y);
+            this.shape = new Rect_1["default"](this.ctx, start, x - start.x, y - start.y, this.fillColor);
         }
     };
     DrawingBoard.prototype.drawEnd = function () {
@@ -175,10 +189,12 @@ var Pencil = /** @class */ (function () {
     }
     Pencil.prototype.draw = function () {
         var _this = this;
+        this.ctx.lineCap = 'round';
         this.PointList.forEach(function (point, index) {
             var lastPoint = _this.PointList[index - 1];
             lastPoint && new Line_1["default"](_this.ctx, lastPoint, point);
         });
+        this.ctx.lineCap = 'butt';
     };
     return Pencil;
 }());

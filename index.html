@@ -19,19 +19,46 @@
   <div class="drawing-board-box">
     <canvas id="board" width="500" height="300"></canvas>
   </div>
-  <button onclick="setTool('pencil')">pencil</button>
-  <button onclick="setTool('text')">text</button>
-  <button onclick="setTool('rect')">rect</button>
-  <button onclick="setTool('line')">line</button>
-  <button onclick="setTool('eraser')">eraser</button>
+  <button onclick="db.setTool('pencil')">pencil</button>
+  <button onclick="db.setTool('text')">text</button>
+  <button onclick="db.setTool('rect')">rect</button>
+  <button onclick="db.setTool('line')">line</button>
+  <button onclick="db.setTool('eraser')">eraser</button>
+  <div class="size">
+    <span>size:</span>
+    <label><input type="radio" name="size" value="3">3</label>
+    <label><input type="radio" name="size" value="5" checked>5</label>
+    <label><input type="radio" name="size" value="10">10</label>
+    <label><input type="radio" name="size" value="15">15</label>
+    <label><input type="radio" name="size" value="20">20</label>
+    <label><input type="radio" name="size" value="30">30</label>
+  </div>
+  <div class="color">
+    <span>color:</span>
+    <input type="color" name="color" id="color" />
+  </div>
+  <div class="fill-color">
+    <span>fillColor:</span>
+    <input type="color" name="fillColor" id="fillColor" />
+  </div>
   <script src="./dist/drawing-board.js"></script>
   <script>
     var oBoard = document.getElementById('board');
-    var el = new DrawingBoard(oBoard);
+    var db = new DrawingBoard(oBoard);
 
-    function setTool (tool) {
-      el.currentTool = tool || 'pencil';
+    var aSize = document.getElementsByName('size');
+    for (var index = 0; index < aSize.length; index++) {
+      const element = aSize[index];
+      element.addEventListener('change', function () {
+        db.setSize(this.value);
+      }, false)
     }
+    document.getElementById('color').addEventListener('change', function () {
+      db.setColor(this.value);
+    }, false)
+    document.getElementById('fillColor').addEventListener('change', function () {
+      db.setFillColor(this.value);
+    }, false)
   </script>
 </body>
 </html>

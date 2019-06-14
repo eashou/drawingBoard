@@ -14,10 +14,12 @@ class Pencil {
   }
 
   draw () {
+    this.ctx.lineCap = 'round';
     this.PointList.forEach((point, index) => {
       const lastPoint = this.PointList[index - 1];
       lastPoint && new Line(this.ctx, lastPoint, point);
     })
+    this.ctx.lineCap = 'butt';
   }
 }
 
