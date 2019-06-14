@@ -13,9 +13,12 @@ The goal is to implement a canvas drawing board library with Javascript
 ```
 
 ## Options
-| Param |Available value |
-| ------------- | ------------- |
-| currentTool  | 'pencil', 'text', 'rect', 'line', 'eraser'  |
+| Param         | type          | Available value |
+| ------------- | ------------- | ------------- |
+| currentTool   | string        | 'pencil', 'text', 'rect', 'line', 'eraser'  |
+| size          | number        | 1,2,3,... |
+| color         | string        | something like that: '#000' or 'black' or 'rgb(0, 0, 0)' |
+| fillColor     | string        |  |
 
 ## Tools
 - [x] Pencil
@@ -23,10 +26,19 @@ The goal is to implement a canvas drawing board library with Javascript
 - [x] Eraser
 - [x] Rect
 - [x] Text
-- [ ] Color
-- [ ] Size
-- [ ] Zoom
+- [ ] Ellipse
 - [ ] Image
+- [ ] ...
+
+## Methods
+- [x] setTool
+- [x] setSize
+- [x] setColor
+- [x] setFillColoe
+- [ ] Undo
+- [ ] Redo
+- [ ] Clear
+- [ ] Zoom
 - [ ] ...
 
 ## Demo
