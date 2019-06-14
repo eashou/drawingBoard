@@ -26,7 +26,7 @@ The goal is to implement a canvas drawing board library with Javascript
 - [x] Eraser
 - [x] Rect
 - [x] Text
-- [ ] Ellipse
+- [x] Ellipse
 - [ ] Image
 - [ ] ...
 

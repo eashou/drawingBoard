@@ -6,6 +6,7 @@ import Pencil from './tools/Pencil';
 import Eraser from './tools/Eraser';
 import Rect from './tools/Rect';
 import Text from './tools/Text';
+import Ellipse from './tools/Ellipse';
 
 interface ConfigArgs {
   currentTool?: string,
@@ -25,9 +26,9 @@ class DrawingBoard {
   ctx: CanvasRenderingContext2D;
   isDrawing: boolean = false;
   pointList: Array<Point> = [];
-  shape: Line|Pencil|Eraser|Rect|Text;
-  shapeList: Array<Line|Pencil|Eraser|Rect|Text> = [];
-  redoShapeList: Array<Line|Pencil|Eraser|Rect|Text> = [];
+  shape: Line|Pencil|Eraser|Rect|Text|Ellipse;
+  shapeList: Array<Line|Pencil|Eraser|Rect|Text|Ellipse> = [];
+  redoShapeList: Array<Line|Pencil|Eraser|Rect|Text|Ellipse> = [];
   currentTool: string;
   size: number;
   color: string;
@@ -137,6 +138,8 @@ class DrawingBoard {
       this.shape = new Line(this.ctx, start, end);
     } else if (this.currentTool === 'rect') {
       this.shape = new Rect(this.ctx, start, x - start.x, y - start.y, this.fillColor);
+    } else if (this.currentTool === 'ellipse') {
+      this.shape = new Ellipse(this.ctx, start, end, this.fillColor);
     }
   }
 

@@ -24,6 +24,7 @@
   <button onclick="db.setTool('rect')">rect</button>
   <button onclick="db.setTool('line')">line</button>
   <button onclick="db.setTool('eraser')">eraser</button>
+  <button onclick="db.setTool('ellipse')">ellipse</button>
   <button onclick="db.redo()">redo</button>
   <button onclick="db.undo()">undo</button>
   <div class="size">
@@ -43,6 +44,7 @@
     <span>fillColor:</span>
     <input type="color" name="fillColor" id="fillColor" />
   </div>
+
   <script src="./dist/drawing-board.js"></script>
   <script>
     var oBoard = document.getElementById('board');

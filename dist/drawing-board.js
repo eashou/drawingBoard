@@ -7,6 +7,7 @@ var Pencil_1 = require("./tools/Pencil");
 var Eraser_1 = require("./tools/Eraser");
 var Rect_1 = require("./tools/Rect");
 var Text_1 = require("./tools/Text");
+var Ellipse_1 = require("./tools/Ellipse");
 ;
 var defaultArgs = {
     currentTool: 'pencil',
@@ -125,6 +126,9 @@ var DrawingBoard = /** @class */ (function () {
         else if (this.currentTool === 'rect') {
             this.shape = new Rect_1["default"](this.ctx, start, x - start.x, y - start.y, this.fillColor);
         }
+        else if (this.currentTool === 'ellipse') {
+            this.shape = new Ellipse_1["default"](this.ctx, start, end, this.fillColor);
+        }
     };
     DrawingBoard.prototype.drawEnd = function () {
         this.isDrawing && this.shape && this.shapeList.push(this.shape);
@@ -137,7 +141,45 @@ var DrawingBoard = /** @class */ (function () {
 }());
 module.exports = DrawingBoard;
 
-},{"./tools/Eraser":2,"./tools/Line":3,"./tools/Pencil":4,"./tools/Point":5,"./tools/Rect":6,"./tools/Text":7}],2:[function(require,module,exports){
+},{"./tools/Ellipse":2,"./tools/Eraser":3,"./tools/Line":4,"./tools/Pencil":5,"./tools/Point":6,"./tools/Rect":7,"./tools/Text":8}],2:[function(require,module,exports){
+'use strict';
+exports.__esModule = true;
+var Ellipse = /** @class */ (function () {
+    function Ellipse(ctx, start, end, bgColor) {
+        this.ctx = ctx;
+        this.start = start;
+        this.end = end;
+        this.bgColor = bgColor;
+        this.draw();
+    }
+    Ellipse.prototype.draw = function () {
+        var x = (this.end.x + this.start.x) / 2;
+        var y = (this.end.y + this.start.y) / 2;
+        // const a = Math.sqrt(Math.pow((this.end.x - this.start.x), 2) + Math.pow((this.end.y - this.start.y), 2)) / 2
+        // const b = ((this.end.y - this.start.y) / (this.end.x - this.start.x)) * a
+        // const rotation = Math.atan(b / a)
+        var a = Math.abs(this.end.x - this.start.x) / 2;
+        var b = Math.abs(this.end.y - this.start.y) / 2;
+        this.ctx.beginPath();
+        this.ctx.save();
+        this.ctx.translate(x, y);
+        this.ctx.rotate(0);
+        this.ctx.scale(a, b);
+        this.ctx.arc(0, 0, 1, 0, 2 * Math.PI, true);
+        this.ctx.restore();
+        if (this.bgColor) {
+            this.ctx.fillStyle = this.bgColor;
+            this.ctx.fill();
+        }
+        this.ctx.lineWidth = this.end.size;
+        this.ctx.strokeStyle = this.end.color;
+        this.ctx.stroke();
+    };
+    return Ellipse;
+}());
+exports["default"] = Ellipse;
+
+},{}],3:[function(require,module,exports){
 'use strict';
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -170,7 +212,7 @@ var Eraser = /** @class */ (function (_super) {
 }(Pencil_1["default"]));
 exports["default"] = Eraser;
 
-},{"./Pencil":4}],3:[function(require,module,exports){
+},{"./Pencil":5}],4:[function(require,module,exports){
 'use strict';
 exports.__esModule = true;
 var Line = /** @class */ (function () {
@@ -193,7 +235,7 @@ var Line = /** @class */ (function () {
 }());
 exports["default"] = Line;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 exports.__esModule = true;
 var Line_1 = require("./Line");
@@ -216,7 +258,7 @@ var Pencil = /** @class */ (function () {
 }());
 exports["default"] = Pencil;
 
-},{"./Line":3}],5:[function(require,module,exports){
+},{"./Line":4}],6:[function(require,module,exports){
 'use strict';
 exports.__esModule = true;
 var Point = /** @class */ (function () {
@@ -230,7 +272,7 @@ var Point = /** @class */ (function () {
 }());
 exports["default"] = Point;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 exports.__esModule = true;
 var Rect = /** @class */ (function () {
@@ -255,7 +297,7 @@ var Rect = /** @class */ (function () {
 }());
 exports["default"] = Rect;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 exports.__esModule = true;
 var Text = /** @class */ (function () {
