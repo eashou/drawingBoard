@@ -22,13 +22,14 @@ var DrawingBoard = /** @class */ (function () {
         this.isDrawing = false;
         this.pointList = [];
         this.shapeList = [];
+        this.redoShapeList = [];
         this.el = el;
         this.ctx = el.getContext('2d');
         this.currentTool = options.currentTool;
         this.size = options.size;
         this.color = options.color;
         this.fillColor = options.fillColor;
-        this.init();
+        this.redraw();
         el.addEventListener('mousedown', function (ev) {
             _this_1.drawStart(ev.offsetX, ev.offsetY);
         }, false);
@@ -51,6 +52,20 @@ var DrawingBoard = /** @class */ (function () {
     };
     DrawingBoard.prototype.setFillColor = function (color) {
         this.fillColor = color;
+    };
+    DrawingBoard.prototype.redo = function () {
+        var shape = this.shapeList.pop();
+        if (!shape)
+            return;
+        this.redoShapeList.push(shape);
+        this.redraw();
+    };
+    DrawingBoard.prototype.undo = function () {
+        var shape = this.redoShapeList.pop();
+        if (!shape)
+            return;
+        this.shapeList.push(shape);
+        this.redraw();
     };
     DrawingBoard.prototype.createTxtInput = function (start) {
         if (this.txtInput)
@@ -77,7 +92,7 @@ var DrawingBoard = /** @class */ (function () {
             clearTimeout(timer);
         }, 30);
     };
-    DrawingBoard.prototype.init = function () {
+    DrawingBoard.prototype.redraw = function () {
         this.ctx.clearRect(0, 0, this.el.width, this.el.height);
         this.shapeList.forEach(function (shape) {
             shape.draw();
@@ -85,6 +100,7 @@ var DrawingBoard = /** @class */ (function () {
     };
     DrawingBoard.prototype.drawStart = function (x, y) {
         this.isDrawing = true;
+        this.redoShapeList = [];
         this.pointList.push(new Point_1["default"](x, y, this.size, this.color));
         if (this.currentTool === 'text') {
             this.createTxtInput(this.pointList[this.pointList.length - 1]);
@@ -93,7 +109,7 @@ var DrawingBoard = /** @class */ (function () {
     DrawingBoard.prototype.drawing = function (x, y) {
         if (!this.isDrawing)
             return;
-        this.init();
+        this.redraw();
         var start = this.pointList[0];
         var end = new Point_1["default"](x, y, this.size, this.color);
         this.pointList.push(end);

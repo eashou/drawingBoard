@@ -35,10 +35,10 @@ The goal is to implement a canvas drawing board library with Javascript
 - [x] setSize
 - [x] setColor
 - [x] setFillColoe
-- [ ] Undo
-- [ ] Redo
-- [ ] Clear
-- [ ] Zoom
+- [x] redo
+- [x] undo
+- [ ] clear
+- [ ] zoom
 - [ ] ...
 
 ## Demo

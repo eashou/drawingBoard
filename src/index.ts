@@ -27,6 +27,7 @@ class DrawingBoard {
   pointList: Array<Point> = [];
   shape: Line|Pencil|Eraser|Rect|Text;
   shapeList: Array<Line|Pencil|Eraser|Rect|Text> = [];
+  redoShapeList: Array<Line|Pencil|Eraser|Rect|Text> = [];
   currentTool: string;
   size: number;
   color: string;
@@ -39,7 +40,7 @@ class DrawingBoard {
     this.size = options.size;
     this.color = options.color;
     this.fillColor = options.fillColor;
-    this.init();
+    this.redraw();
 
     el.addEventListener('mousedown', ev => {
       this.drawStart(ev.offsetX, ev.offsetY);
@@ -64,6 +65,20 @@ class DrawingBoard {
 
   setFillColor (color: string) {
     this.fillColor = color
+  }
+
+  redo () {
+    const shape = this.shapeList.pop();
+    if (!shape) return;
+    this.redoShapeList.push(shape);
+    this.redraw();
+  }
+
+  undo () {
+    const shape = this.redoShapeList.pop();
+    if (!shape) return;
+    this.shapeList.push(shape);
+    this.redraw();
   }
 
   createTxtInput (start: Point) {
@@ -92,7 +107,7 @@ class DrawingBoard {
     }, 30)
   }
 
-  init () {
+  redraw () {
     this.ctx.clearRect(0, 0, this.el.width, this.el.height);
     this.shapeList.forEach(shape => {
       shape.draw();
@@ -101,6 +116,7 @@ class DrawingBoard {
 
   drawStart (x: number, y: number) {
     this.isDrawing = true;
+    this.redoShapeList = [];
     this.pointList.push(new Point(x, y, this.size, this.color));
     if (this.currentTool === 'text') {
       this.createTxtInput(this.pointList[this.pointList.length - 1]);
@@ -109,7 +125,7 @@ class DrawingBoard {
 
   drawing (x: number, y: number) {
     if (!this.isDrawing) return;
-    this.init();
+    this.redraw();
     const start: Point = this.pointList[0];
     const end: Point = new Point(x, y, this.size, this.color);
     this.pointList.push(end);
