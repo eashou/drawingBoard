@@ -13,13 +13,15 @@ interface ConfigArgs {
   currentTool?: string,
   size?: number,
   color?: string,
-  fillColor?: string
+  fillColor?: string,
+  zoom?: number
 };
 
 const defaultArgs: ConfigArgs = {
   currentTool: 'pencil',
   size: 5,
-  color: 'black'
+  color: 'black',
+  zoom: 1
 };
 
 class DrawingBoard {
@@ -31,6 +33,8 @@ class DrawingBoard {
   shape: Shape;
   shapeList: Array<Shape> = [];
   redoShapeList: Array<Shape[]> = [];
+  origin: Object;
+  zoomFator: number = 1;
   currentTool: string;
   size: number;
   color: string;
@@ -43,23 +47,24 @@ class DrawingBoard {
     this.size = options.size;
     this.color = options.color;
     this.fillColor = options.fillColor;
-    this.redraw();
+    this.zoomFator = options.zoom;
+    this.zoom(this.zoomFator);
 
     el.addEventListener('mousedown', ev => {
-      this.drawStart(ev.offsetX, ev.offsetY);
+      this.drawStart(ev.offsetX / this.zoomFator, ev.offsetY / this.zoomFator);
     }, false);
     el.addEventListener('mousemove', ev => {
-      this.drawing(ev.offsetX, ev.offsetY);
+      this.drawing(ev.offsetX / this.zoomFator, ev.offsetY / this.zoomFator);
     }, false);
     document.addEventListener('mouseup', this.drawEnd.bind(this), false);
   }
 
   setTool (tool: string = 'pencil') {
-    this.currentTool = tool
+    this.currentTool = tool;
   }
 
   setSize (size: number = 5) {
-    this.size = size
+    this.size = size / this.zoomFator;
   }
 
   setColor (color: string = 'black') {
@@ -67,7 +72,7 @@ class DrawingBoard {
   }
 
   setFillColor (color: string) {
-    this.fillColor = color
+    this.fillColor = color;
   }
 
   redo () {
@@ -91,12 +96,21 @@ class DrawingBoard {
     this.redraw();
   }
 
+  zoom (zoom: number) {
+    if (!zoom || (zoom <= 0 && zoom > 2) || this.zoomFator === zoom) return;
+    this.ctx.scale(1 / this.zoomFator, 1 / this.zoomFator);
+    this.size *= this.zoomFator / zoom;
+    this.zoomFator = zoom;
+    this.ctx.scale(this.zoomFator, this.zoomFator);
+    this.redraw();
+  }
+
   createTxtInput (start: Point) {
     if (this.txtInput) return;
     this.txtInput = document.createElement('textarea');
     this.txtInput.style.position = 'absolute';
-    this.txtInput.style.left = start.x + 'px';
-    this.txtInput.style.top = start.y + 'px';
+    this.txtInput.style.left = start.x * this.zoomFator + 'px';
+    this.txtInput.style.top = start.y * this.zoomFator + 'px';
     this.txtInput.style.border = '1px solid #000';
     this.el.parentNode.appendChild(this.txtInput);
     this.txtInput.focus();
@@ -118,7 +132,7 @@ class DrawingBoard {
   }
 
   redraw () {
-    this.ctx.clearRect(0, 0, this.el.width, this.el.height);
+    this.ctx.clearRect(0, 0, this.el.width / this.zoomFator, this.el.height / this.zoomFator);
     this.shapeList.forEach(shape => {
       shape.draw();
     });
@@ -153,7 +167,8 @@ class DrawingBoard {
   }
 
   drawEnd () {
-    this.isDrawing && this.shape && this.shapeList.push(this.shape);
+    if (!this.isDrawing) return;
+    this.shape && this.shapeList.push(this.shape);
     this.pointList = [];
     this.isDrawing = false;
     this.shape = null;

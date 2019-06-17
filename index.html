@@ -28,6 +28,8 @@
   <button onclick="db.redo()">redo</button>
   <button onclick="db.undo()">undo</button>
   <button onclick="db.clear()">clear</button>
+  <button onclick="zoom()">zoom-</button>
+  <button onclick="zoom(1)">zoom+</button>
   <div class="size">
     <span>size:</span>
     <label><input type="radio" name="size" value="3">3</label>
@@ -50,6 +52,13 @@
   <script>
     var oBoard = document.getElementById('board');
     var db = new DrawingBoard(oBoard);
+
+    var zoomFator = 10;
+    function zoom (bOk) {
+      bOk ? zoomFator++ : zoomFator--;
+      zoomFator = zoomFator < 1 ? 1 : zoomFator >= 20 ? 20 : zoomFator;
+      db.zoom(zoomFator / 10);
+    }
 
     var aSize = document.getElementsByName('size');
     for (var index = 0; index < aSize.length; index++) {

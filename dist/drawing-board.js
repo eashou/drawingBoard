@@ -12,7 +12,8 @@ var Ellipse_1 = require("./tools/Ellipse");
 var defaultArgs = {
     currentTool: 'pencil',
     size: 5,
-    color: 'black'
+    color: 'black',
+    zoom: 1
 };
 var DrawingBoard = /** @class */ (function () {
     function DrawingBoard(el, options) {
@@ -24,18 +25,20 @@ var DrawingBoard = /** @class */ (function () {
         this.pointList = [];
         this.shapeList = [];
         this.redoShapeList = [];
+        this.zoomFator = 1;
         this.el = el;
         this.ctx = el.getContext('2d');
         this.currentTool = options.currentTool;
         this.size = options.size;
         this.color = options.color;
         this.fillColor = options.fillColor;
-        this.redraw();
+        this.zoomFator = options.zoom;
+        this.zoom(this.zoomFator);
         el.addEventListener('mousedown', function (ev) {
-            _this_1.drawStart(ev.offsetX, ev.offsetY);
+            _this_1.drawStart(ev.offsetX / _this_1.zoomFator, ev.offsetY / _this_1.zoomFator);
         }, false);
         el.addEventListener('mousemove', function (ev) {
-            _this_1.drawing(ev.offsetX, ev.offsetY);
+            _this_1.drawing(ev.offsetX / _this_1.zoomFator, ev.offsetY / _this_1.zoomFator);
         }, false);
         document.addEventListener('mouseup', this.drawEnd.bind(this), false);
     }
@@ -45,7 +48,7 @@ var DrawingBoard = /** @class */ (function () {
     };
     DrawingBoard.prototype.setSize = function (size) {
         if (size === void 0) { size = 5; }
-        this.size = size;
+        this.size = size / this.zoomFator;
     };
     DrawingBoard.prototype.setColor = function (color) {
         if (color === void 0) { color = 'black'; }
@@ -74,13 +77,22 @@ var DrawingBoard = /** @class */ (function () {
         this.shapeList = [];
         this.redraw();
     };
+    DrawingBoard.prototype.zoom = function (zoom) {
+        if (!zoom || zoom <= 0 || this.zoomFator === zoom)
+            return;
+        this.ctx.scale(1 / this.zoomFator, 1 / this.zoomFator);
+        this.size *= this.zoomFator / zoom;
+        this.zoomFator = zoom;
+        this.ctx.scale(this.zoomFator, this.zoomFator);
+        this.redraw();
+    };
     DrawingBoard.prototype.createTxtInput = function (start) {
         if (this.txtInput)
             return;
         this.txtInput = document.createElement('textarea');
         this.txtInput.style.position = 'absolute';
-        this.txtInput.style.left = start.x + 'px';
-        this.txtInput.style.top = start.y + 'px';
+        this.txtInput.style.left = start.x * this.zoomFator + 'px';
+        this.txtInput.style.top = start.y * this.zoomFator + 'px';
         this.txtInput.style.border = '1px solid #000';
         this.el.parentNode.appendChild(this.txtInput);
         this.txtInput.focus();
@@ -100,7 +112,7 @@ var DrawingBoard = /** @class */ (function () {
         }, 30);
     };
     DrawingBoard.prototype.redraw = function () {
-        this.ctx.clearRect(0, 0, this.el.width, this.el.height);
+        this.ctx.clearRect(0, 0, this.el.width / this.zoomFator, this.el.height / this.zoomFator);
         this.shapeList.forEach(function (shape) {
             shape.draw();
         });
@@ -137,7 +149,9 @@ var DrawingBoard = /** @class */ (function () {
         }
     };
     DrawingBoard.prototype.drawEnd = function () {
-        this.isDrawing && this.shape && this.shapeList.push(this.shape);
+        if (!this.isDrawing)
+            return;
+        this.shape && this.shapeList.push(this.shape);
         this.pointList = [];
         this.isDrawing = false;
         this.shape = null;

@@ -17,6 +17,7 @@ The goal is to implement a canvas drawing board library with Javascript
 | ------------- | ------------- | ------------- |
 | currentTool   | string        | 'pencil', 'text', 'rect', 'line', 'eraser'  |
 | size          | number        | 1,2,3,... |
+| zoom          | number        | between 0 and 2, excluding 0 |
 | color         | string        | something like that: '#000' or 'black' or 'rgb(0, 0, 0)' |
 | fillColor     | string        |  |
 
@@ -38,7 +39,8 @@ The goal is to implement a canvas drawing board library with Javascript
 - [x] redo
 - [x] undo
 - [x] clear
-- [ ] zoom
+- [x] zoom
+- [ ] move
 - [ ] ...
 
 ## Demo
