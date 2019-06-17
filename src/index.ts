@@ -8,6 +8,7 @@ import Rect from './tools/Rect';
 import Text from './tools/Text';
 import Ellipse from './tools/Ellipse';
 
+type Shape = Line|Pencil|Eraser|Rect|Text|Ellipse;
 interface ConfigArgs {
   currentTool?: string,
   size?: number,
@@ -20,15 +21,16 @@ const defaultArgs: ConfigArgs = {
   size: 5,
   color: 'black'
 };
+
 class DrawingBoard {
   el: HTMLCanvasElement = null;
   txtInput: HTMLTextAreaElement = null;
   ctx: CanvasRenderingContext2D;
   isDrawing: boolean = false;
   pointList: Array<Point> = [];
-  shape: Line|Pencil|Eraser|Rect|Text|Ellipse;
-  shapeList: Array<Line|Pencil|Eraser|Rect|Text|Ellipse> = [];
-  redoShapeList: Array<Line|Pencil|Eraser|Rect|Text|Ellipse> = [];
+  shape: Shape;
+  shapeList: Array<Shape> = [];
+  redoShapeList: Array<Shape[]> = [];
   currentTool: string;
   size: number;
   color: string;
@@ -69,16 +71,23 @@ class DrawingBoard {
   }
 
   redo () {
-    const shape = this.shapeList.pop();
+    const shape: Shape = this.shapeList.pop();
     if (!shape) return;
-    this.redoShapeList.push(shape);
+    const shapes = [ shape ];
+    this.redoShapeList.push(shapes);
     this.redraw();
   }
 
   undo () {
-    const shape = this.redoShapeList.pop();
-    if (!shape) return;
-    this.shapeList.push(shape);
+    const shapes: Shape[] = this.redoShapeList.pop();
+    if (!shapes) return;
+    this.shapeList = this.shapeList.concat(shapes);
+    this.redraw();
+  }
+
+  clear () {
+    this.redoShapeList.push(this.shapeList);
+    this.shapeList = [];
     this.redraw();
   }
 

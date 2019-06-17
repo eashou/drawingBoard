@@ -37,7 +37,7 @@ The goal is to implement a canvas drawing board library with Javascript
 - [x] setFillColoe
 - [x] redo
 - [x] undo
-- [ ] clear
+- [x] clear
 - [ ] zoom
 - [ ] ...
 

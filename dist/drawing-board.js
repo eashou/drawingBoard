@@ -58,14 +58,20 @@ var DrawingBoard = /** @class */ (function () {
         var shape = this.shapeList.pop();
         if (!shape)
             return;
-        this.redoShapeList.push(shape);
+        var shapes = [shape];
+        this.redoShapeList.push(shapes);
         this.redraw();
     };
     DrawingBoard.prototype.undo = function () {
-        var shape = this.redoShapeList.pop();
-        if (!shape)
+        var shapes = this.redoShapeList.pop();
+        if (!shapes)
             return;
-        this.shapeList.push(shape);
+        this.shapeList = this.shapeList.concat(shapes);
+        this.redraw();
+    };
+    DrawingBoard.prototype.clear = function () {
+        this.redoShapeList.push(this.shapeList);
+        this.shapeList = [];
         this.redraw();
     };
     DrawingBoard.prototype.createTxtInput = function (start) {
