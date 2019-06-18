@@ -25,6 +25,7 @@ var DrawingBoard = /** @class */ (function () {
         this.pointList = [];
         this.shapeList = [];
         this.redoShapeList = [];
+        this.origin = { x: 0, y: 0 };
         this.zoomFator = 1;
         this.el = el;
         this.ctx = el.getContext('2d');
@@ -35,10 +36,10 @@ var DrawingBoard = /** @class */ (function () {
         this.zoomFator = options.zoom;
         this.zoom(this.zoomFator);
         el.addEventListener('mousedown', function (ev) {
-            _this_1.drawStart(ev.offsetX / _this_1.zoomFator, ev.offsetY / _this_1.zoomFator);
+            _this_1.drawStart(ev.offsetX / _this_1.zoomFator - _this_1.origin.x, ev.offsetY / _this_1.zoomFator - _this_1.origin.y);
         }, false);
         el.addEventListener('mousemove', function (ev) {
-            _this_1.drawing(ev.offsetX / _this_1.zoomFator, ev.offsetY / _this_1.zoomFator);
+            _this_1.drawing(ev.offsetX / _this_1.zoomFator - _this_1.origin.x, ev.offsetY / _this_1.zoomFator - _this_1.origin.y);
         }, false);
         document.addEventListener('mouseup', this.drawEnd.bind(this), false);
     }
@@ -78,12 +79,18 @@ var DrawingBoard = /** @class */ (function () {
         this.redraw();
     };
     DrawingBoard.prototype.zoom = function (zoom) {
-        if (!zoom || zoom <= 0 || this.zoomFator === zoom)
+        if (!zoom || (zoom <= 0 && zoom > 2) || this.zoomFator === zoom)
             return;
         this.ctx.scale(1 / this.zoomFator, 1 / this.zoomFator);
         this.size *= this.zoomFator / zoom;
         this.zoomFator = zoom;
         this.ctx.scale(this.zoomFator, this.zoomFator);
+        this.redraw();
+    };
+    DrawingBoard.prototype.move = function (origin) {
+        this.ctx.translate(-this.origin.x, -this.origin.y);
+        this.origin = Object.assign({}, origin);
+        this.ctx.translate(this.origin.x, this.origin.y);
         this.redraw();
     };
     DrawingBoard.prototype.createTxtInput = function (start) {

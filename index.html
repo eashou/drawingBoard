@@ -30,6 +30,10 @@
   <button onclick="db.clear()">clear</button>
   <button onclick="zoom()">zoom-</button>
   <button onclick="zoom(1)">zoom+</button>
+  <button onclick="move(1)">∧</button>
+  <button onclick="move(2)">∨</button>
+  <button onclick="move(3)">＜</button>
+  <button onclick="move(4)">＞</button>
   <div class="size">
     <span>size:</span>
     <label><input type="radio" name="size" value="3">3</label>
@@ -58,6 +62,25 @@
       bOk ? zoomFator++ : zoomFator--;
       zoomFator = zoomFator < 1 ? 1 : zoomFator >= 20 ? 20 : zoomFator;
       db.zoom(zoomFator / 10);
+    }
+
+    var origin = {x: 0, y: 0};
+    function move (bOk) {
+      switch (bOk) {
+        case 1: // up
+          origin.y-=5;
+          break;
+        case 2: // down
+          origin.y+=5;
+          break;
+        case 3: // left
+          origin.x-=5;
+          break;
+        case 4: // right
+          origin.x+=5;
+          break;
+      }
+      db.move(origin);
     }
 
     var aSize = document.getElementsByName('size');

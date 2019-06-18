@@ -16,6 +16,10 @@ interface ConfigArgs {
   fillColor?: string,
   zoom?: number
 };
+interface Origin {
+  x: number,
+  y: number
+}
 
 const defaultArgs: ConfigArgs = {
   currentTool: 'pencil',
@@ -33,7 +37,7 @@ class DrawingBoard {
   shape: Shape;
   shapeList: Array<Shape> = [];
   redoShapeList: Array<Shape[]> = [];
-  origin: Object;
+  origin: Origin = {x: 0, y: 0};
   zoomFator: number = 1;
   currentTool: string;
   size: number;
@@ -51,10 +55,10 @@ class DrawingBoard {
     this.zoom(this.zoomFator);
 
     el.addEventListener('mousedown', ev => {
-      this.drawStart(ev.offsetX / this.zoomFator, ev.offsetY / this.zoomFator);
+      this.drawStart(ev.offsetX / this.zoomFator - this.origin.x, ev.offsetY / this.zoomFator - this.origin.y);
     }, false);
     el.addEventListener('mousemove', ev => {
-      this.drawing(ev.offsetX / this.zoomFator, ev.offsetY / this.zoomFator);
+      this.drawing(ev.offsetX / this.zoomFator - this.origin.x, ev.offsetY / this.zoomFator - this.origin.y);
     }, false);
     document.addEventListener('mouseup', this.drawEnd.bind(this), false);
   }
@@ -102,6 +106,13 @@ class DrawingBoard {
     this.size *= this.zoomFator / zoom;
     this.zoomFator = zoom;
     this.ctx.scale(this.zoomFator, this.zoomFator);
+    this.redraw();
+  }
+
+  move (origin: Origin) {
+    this.ctx.translate(-this.origin.x, -this.origin.y);
+    this.origin = Object.assign({}, origin);
+    this.ctx.translate(this.origin.x, this.origin.y);
     this.redraw();
   }
 
