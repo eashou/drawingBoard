@@ -34,12 +34,16 @@ var DrawingBoard = /** @class */ (function () {
         this.color = options.color;
         this.fillColor = options.fillColor;
         this.zoomFator = options.zoom;
-        this.zoom(this.zoomFator);
+        this.redraw();
         el.addEventListener('mousedown', function (ev) {
-            _this_1.drawStart(ev.offsetX / _this_1.zoomFator - _this_1.origin.x, ev.offsetY / _this_1.zoomFator - _this_1.origin.y);
+            var x = Math.round(ev.offsetX / _this_1.zoomFator - _this_1.origin.x);
+            var y = Math.round(ev.offsetY / _this_1.zoomFator - _this_1.origin.y);
+            _this_1.drawStart(x, y);
         }, false);
         el.addEventListener('mousemove', function (ev) {
-            _this_1.drawing(ev.offsetX / _this_1.zoomFator - _this_1.origin.x, ev.offsetY / _this_1.zoomFator - _this_1.origin.y);
+            var x = Math.round(ev.offsetX / _this_1.zoomFator - _this_1.origin.x);
+            var y = Math.round(ev.offsetY / _this_1.zoomFator - _this_1.origin.y);
+            _this_1.drawing(x, y);
         }, false);
         document.addEventListener('mouseup', this.drawEnd.bind(this), false);
     }
@@ -119,15 +123,17 @@ var DrawingBoard = /** @class */ (function () {
         }, 30);
     };
     DrawingBoard.prototype.redraw = function () {
-        this.ctx.clearRect(0, 0, this.el.width / this.zoomFator, this.el.height / this.zoomFator);
+        this.ctx.clearRect(-this.origin.x, -this.origin.y, this.el.width / this.zoomFator + this.origin.x, this.el.height / this.zoomFator + this.origin.y);
         this.shapeList.forEach(function (shape) {
             shape.draw();
         });
     };
     DrawingBoard.prototype.drawStart = function (x, y) {
         this.isDrawing = true;
-        this.redoShapeList = [];
         this.pointList.push(new Point_1["default"](x, y, this.size, this.color));
+        if (this.currentTool !== 'move') {
+            this.redoShapeList = [];
+        }
         if (this.currentTool === 'text') {
             this.createTxtInput(this.pointList[this.pointList.length - 1]);
         }
@@ -135,9 +141,11 @@ var DrawingBoard = /** @class */ (function () {
     DrawingBoard.prototype.drawing = function (x, y) {
         if (!this.isDrawing)
             return;
-        this.redraw();
         var start = this.pointList[0];
         var end = new Point_1["default"](x, y, this.size, this.color);
+        if (start.x === end.x && start.y === end.y)
+            return;
+        this.currentTool !== 'move' && this.redraw();
         this.pointList.push(end);
         if (this.currentTool === 'pencil') {
             this.shape = new Pencil_1["default"](this.ctx, this.pointList);
@@ -153,6 +161,9 @@ var DrawingBoard = /** @class */ (function () {
         }
         else if (this.currentTool === 'ellipse') {
             this.shape = new Ellipse_1["default"](this.ctx, start, end, this.fillColor);
+        }
+        else if (this.currentTool === 'move') {
+            this.move({ x: this.origin.x + x - start.x, y: this.origin.y + y - start.y });
         }
     };
     DrawingBoard.prototype.drawEnd = function () {

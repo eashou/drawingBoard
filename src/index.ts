@@ -52,13 +52,17 @@ class DrawingBoard {
     this.color = options.color;
     this.fillColor = options.fillColor;
     this.zoomFator = options.zoom;
-    this.zoom(this.zoomFator);
+    this.redraw();
 
     el.addEventListener('mousedown', ev => {
-      this.drawStart(ev.offsetX / this.zoomFator - this.origin.x, ev.offsetY / this.zoomFator - this.origin.y);
+      const x = Math.round(ev.offsetX / this.zoomFator - this.origin.x);
+      const y = Math.round(ev.offsetY / this.zoomFator - this.origin.y);
+      this.drawStart(x, y);
     }, false);
     el.addEventListener('mousemove', ev => {
-      this.drawing(ev.offsetX / this.zoomFator - this.origin.x, ev.offsetY / this.zoomFator - this.origin.y);
+      const x = Math.round(ev.offsetX / this.zoomFator - this.origin.x);
+      const y = Math.round(ev.offsetY / this.zoomFator - this.origin.y);
+      this.drawing(x, y);
     }, false);
     document.addEventListener('mouseup', this.drawEnd.bind(this), false);
   }
@@ -143,7 +147,7 @@ class DrawingBoard {
   }
 
   redraw () {
-    this.ctx.clearRect(0, 0, this.el.width / this.zoomFator, this.el.height / this.zoomFator);
+    this.ctx.clearRect(-this.origin.x, -this.origin.y, this.el.width / this.zoomFator + this.origin.x, this.el.height / this.zoomFator + this.origin.y);
     this.shapeList.forEach(shape => {
       shape.draw();
     });
@@ -151,8 +155,10 @@ class DrawingBoard {
 
   drawStart (x: number, y: number) {
     this.isDrawing = true;
-    this.redoShapeList = [];
     this.pointList.push(new Point(x, y, this.size, this.color));
+    if (this.currentTool !== 'move') {
+      this.redoShapeList = [];
+    }
     if (this.currentTool === 'text') {
       this.createTxtInput(this.pointList[this.pointList.length - 1]);
     }
@@ -160,9 +166,10 @@ class DrawingBoard {
 
   drawing (x: number, y: number) {
     if (!this.isDrawing) return;
-    this.redraw();
     const start: Point = this.pointList[0];
     const end: Point = new Point(x, y, this.size, this.color);
+    if (start.x === end.x && start.y === end.y) return;
+    this.currentTool !== 'move' && this.redraw();
     this.pointList.push(end);
     if (this.currentTool === 'pencil') {
       this.shape = new Pencil(this.ctx, this.pointList);
@@ -174,6 +181,8 @@ class DrawingBoard {
       this.shape = new Rect(this.ctx, start, x - start.x, y - start.y, this.fillColor);
     } else if (this.currentTool === 'ellipse') {
       this.shape = new Ellipse(this.ctx, start, end, this.fillColor);
+    } else if (this.currentTool === 'move') {
+      this.move({x: this.origin.x + x - start.x, y: this.origin.y + y - start.y})
     }
   }
 
