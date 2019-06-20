@@ -87,6 +87,10 @@ var DrawingBoard = /** @class */ (function () {
             return;
         this.ctx.scale(1 / this.zoomFator, 1 / this.zoomFator);
         this.size *= this.zoomFator / zoom;
+        this.origin = Object.assign({}, {
+            x: this.origin.x * this.zoomFator / zoom,
+            y: this.origin.y * this.zoomFator / zoom
+        });
         this.zoomFator = zoom;
         this.ctx.scale(this.zoomFator, this.zoomFator);
         this.redraw();
@@ -102,8 +106,8 @@ var DrawingBoard = /** @class */ (function () {
             return;
         this.txtInput = document.createElement('textarea');
         this.txtInput.style.position = 'absolute';
-        this.txtInput.style.left = start.x * this.zoomFator + 'px';
-        this.txtInput.style.top = start.y * this.zoomFator + 'px';
+        this.txtInput.style.left = Math.round(start.x * this.zoomFator + this.origin.x) + 'px';
+        this.txtInput.style.top = Math.round(start.y * this.zoomFator + this.origin.y) + 'px';
         this.txtInput.style.border = '1px solid #000';
         this.el.parentNode.appendChild(this.txtInput);
         this.txtInput.focus();
@@ -123,7 +127,7 @@ var DrawingBoard = /** @class */ (function () {
         }, 30);
     };
     DrawingBoard.prototype.redraw = function () {
-        this.ctx.clearRect(-this.origin.x, -this.origin.y, this.el.width / this.zoomFator + this.origin.x, this.el.height / this.zoomFator + this.origin.y);
+        this.ctx.clearRect(-this.origin.x, -this.origin.y, this.el.width / this.zoomFator, this.el.height / this.zoomFator);
         this.shapeList.forEach(function (shape) {
             shape.draw();
         });
