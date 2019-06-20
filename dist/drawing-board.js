@@ -106,8 +106,8 @@ var DrawingBoard = /** @class */ (function () {
             return;
         this.txtInput = document.createElement('textarea');
         this.txtInput.style.position = 'absolute';
-        this.txtInput.style.left = Math.round(start.x * this.zoomFator + this.origin.x) + 'px';
-        this.txtInput.style.top = Math.round(start.y * this.zoomFator + this.origin.y) + 'px';
+        this.txtInput.style.left = Math.round((start.x + this.origin.x) * this.zoomFator) + 'px';
+        this.txtInput.style.top = Math.round((start.y + this.origin.y) * this.zoomFator) + 'px';
         this.txtInput.style.border = '1px solid #000';
         this.el.parentNode.appendChild(this.txtInput);
         this.txtInput.focus();
