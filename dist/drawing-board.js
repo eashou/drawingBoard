@@ -107,7 +107,9 @@ var DrawingBoard = /** @class */ (function () {
         this.txtInput = document.createElement('textarea');
         this.txtInput.style.position = 'absolute';
         this.txtInput.style.left = Math.round((start.x + this.origin.x) * this.zoomFator) + 'px';
-        this.txtInput.style.top = Math.round((start.y + this.origin.y) * this.zoomFator) + 'px';
+        this.txtInput.style.top = Math.round((start.y + this.origin.y - start.size) * this.zoomFator) + 'px';
+        this.txtInput.style.padding = '0';
+        this.txtInput.style.fontSize = start.size + 'px';
         this.txtInput.style.border = '1px solid #000';
         this.el.parentNode.appendChild(this.txtInput);
         this.txtInput.focus();
@@ -350,6 +352,8 @@ var Text = /** @class */ (function () {
         this.draw();
     }
     Text.prototype.draw = function () {
+        this.ctx.font = this.start.size + 'px serif';
+        this.ctx.fillStyle = this.start.color;
         this.ctx.fillText(this.text, this.start.x, this.start.y);
     };
     return Text;

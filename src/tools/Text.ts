@@ -14,6 +14,8 @@ class Text {
   }
 
   draw () {
+    this.ctx.font = this.start.size + 'px serif';
+    this.ctx.fillStyle = this.start.color;
     this.ctx.fillText(this.text, this.start.x, this.start.y);
   }
 }
