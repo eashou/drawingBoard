@@ -28,6 +28,7 @@ var DrawingBoard = /** @class */ (function () {
         this.origin = { x: 0, y: 0 };
         this.zoomFator = 1;
         this.dash = false;
+        this.arrow = false;
         this.el = el;
         this.ctx = el.getContext('2d');
         this.currentTool = options.currentTool;
@@ -161,7 +162,7 @@ var DrawingBoard = /** @class */ (function () {
             this.shape = new Eraser_1["default"](this.ctx, this.pointList);
         }
         else if (this.currentTool === 'line') {
-            this.shape = new Line_1["default"](this.ctx, start, end, this.dash);
+            this.shape = new Line_1["default"](this.ctx, start, end, this.dash, this.arrow);
         }
         else if (this.currentTool === 'rect') {
             this.shape = new Rect_1["default"](this.ctx, start, x - start.x, y - start.y, this.fillColor);
@@ -260,29 +261,49 @@ exports["default"] = Eraser;
 },{"./Pencil":5}],4:[function(require,module,exports){
 'use strict';
 exports.__esModule = true;
+var Point_1 = require("./Point");
 var Line = /** @class */ (function () {
-    function Line(ctx, start, end, dash) {
+    function Line(ctx, start, end, dash, arrow) {
         this.segments = [15, 5];
         this.ctx = ctx;
         this.start = start;
         this.end = end;
         this.dash = dash;
+        this.arrow = arrow;
         this.draw();
     }
     Line.prototype.draw = function () {
         this.ctx.beginPath();
-        this.ctx.setLineDash(this.dash ? this.segments : []);
+        this.dash && this.ctx.setLineDash(this.segments);
         this.ctx.moveTo(this.start.x, this.start.y);
         this.ctx.lineTo(this.end.x, this.end.y);
         this.ctx.lineWidth = this.end.size;
         this.ctx.strokeStyle = this.end.color;
         this.ctx.stroke();
+        this.ctx.setLineDash([]);
+        this.arrow && this.drawArrow();
+    };
+    Line.prototype.drawArrow = function () {
+        var handle = 15;
+        var angle = 30;
+        var rotaAngle = Math.atan2(this.start.y - this.end.y, this.start.x - this.end.x) * 180 / Math.PI;
+        var angle1 = (rotaAngle + angle) * Math.PI / 180;
+        var angle2 = (rotaAngle - angle) * Math.PI / 180;
+        var point1 = new Point_1["default"](this.end.x + handle * Math.cos(angle1), this.end.y + handle * Math.sin(angle1), this.end.size, this.end.color);
+        var point2 = new Point_1["default"](this.end.x + handle * Math.cos(angle2), this.end.y + handle * Math.sin(angle2), this.end.size, this.end.color);
+        this.ctx.beginPath();
+        this.ctx.moveTo(point1.x, point1.y);
+        this.ctx.lineTo(this.end.x, this.end.y);
+        this.ctx.lineTo(point2.x, point2.y);
+        this.ctx.stroke();
+        // new Line(this.ctx, point1, this.end);
+        // new Line(this.ctx, this.end, point2);
     };
     return Line;
 }());
 exports["default"] = Line;
 
-},{}],5:[function(require,module,exports){
+},{"./Point":6}],5:[function(require,module,exports){
 'use strict';
 exports.__esModule = true;
 var Line_1 = require("./Line");

@@ -23,7 +23,9 @@
   <button onclick="db.setTool('pencil')">pencil</button>
   <button onclick="db.setTool('text')">text</button>
   <button onclick="db.setTool('rect')">rect</button>
-  <button onclick="db.setTool('line')">line</button><label><input type="checkbox" name="dash">dash</label>
+  <button onclick="db.setTool('line')">line</button>
+  <label><input type="checkbox" name="dash">dash</label>
+  <label><input type="checkbox" name="arrow">arrow</label>
   <button onclick="db.setTool('eraser')">eraser</button>
   <button onclick="db.setTool('ellipse')">ellipse</button>
   <button onclick="db.redo()">redo</button>
@@ -100,6 +102,9 @@
     }, false)
     document.querySelector('input[name=dash]').addEventListener('change', function () {
       db.dash = !!this.checked;
+    }, false)
+    document.querySelector('input[name=arrow]').addEventListener('change', function () {
+      db.arrow = !!this.checked;
     }, false)
   </script>
 </body>
