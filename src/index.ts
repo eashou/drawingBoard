@@ -42,6 +42,7 @@ class DrawingBoard {
   currentTool: string;
   size: number;
   color: string;
+  dash: boolean = false;
   fillColor: string;
 
   constructor(el: HTMLCanvasElement, options: ConfigArgs = defaultArgs) {
@@ -182,7 +183,7 @@ class DrawingBoard {
     } else if (this.currentTool === 'eraser') {
       this.shape = new Eraser(this.ctx, this.pointList);
     } else if (this.currentTool === 'line') {
-      this.shape = new Line(this.ctx, start, end);
+      this.shape = new Line(this.ctx, start, end, this.dash);
     } else if (this.currentTool === 'rect') {
       this.shape = new Rect(this.ctx, start, x - start.x, y - start.y, this.fillColor);
     } else if (this.currentTool === 'ellipse') {

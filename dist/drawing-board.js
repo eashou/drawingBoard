@@ -27,6 +27,7 @@ var DrawingBoard = /** @class */ (function () {
         this.redoShapeList = [];
         this.origin = { x: 0, y: 0 };
         this.zoomFator = 1;
+        this.dash = false;
         this.el = el;
         this.ctx = el.getContext('2d');
         this.currentTool = options.currentTool;
@@ -160,7 +161,7 @@ var DrawingBoard = /** @class */ (function () {
             this.shape = new Eraser_1["default"](this.ctx, this.pointList);
         }
         else if (this.currentTool === 'line') {
-            this.shape = new Line_1["default"](this.ctx, start, end);
+            this.shape = new Line_1["default"](this.ctx, start, end, this.dash);
         }
         else if (this.currentTool === 'rect') {
             this.shape = new Rect_1["default"](this.ctx, start, x - start.x, y - start.y, this.fillColor);
@@ -260,20 +261,22 @@ exports["default"] = Eraser;
 'use strict';
 exports.__esModule = true;
 var Line = /** @class */ (function () {
-    function Line(ctx, start, end) {
+    function Line(ctx, start, end, dash) {
+        this.segments = [15, 5];
         this.ctx = ctx;
         this.start = start;
         this.end = end;
+        this.dash = dash;
         this.draw();
     }
     Line.prototype.draw = function () {
         this.ctx.beginPath();
+        this.ctx.setLineDash(this.dash ? this.segments : []);
         this.ctx.moveTo(this.start.x, this.start.y);
         this.ctx.lineTo(this.end.x, this.end.y);
         this.ctx.lineWidth = this.end.size;
         this.ctx.strokeStyle = this.end.color;
         this.ctx.stroke();
-        this.ctx.save();
     };
     return Line;
 }());

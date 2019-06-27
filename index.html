@@ -12,6 +12,7 @@
       height: 300px;
       border: 1px solid #ccc;
       margin: 50px auto;
+      overflow: hidden;
     }
   </style>
 </head>
@@ -22,7 +23,7 @@
   <button onclick="db.setTool('pencil')">pencil</button>
   <button onclick="db.setTool('text')">text</button>
   <button onclick="db.setTool('rect')">rect</button>
-  <button onclick="db.setTool('line')">line</button>
+  <button onclick="db.setTool('line')">line</button><label><input type="checkbox" name="dash">dash</label>
   <button onclick="db.setTool('eraser')">eraser</button>
   <button onclick="db.setTool('ellipse')">ellipse</button>
   <button onclick="db.redo()">redo</button>
@@ -96,6 +97,9 @@
     }, false)
     document.getElementById('fillColor').addEventListener('change', function () {
       db.setFillColor(this.value);
+    }, false)
+    document.querySelector('input[name=dash]').addEventListener('change', function () {
+      db.dash = !!this.checked;
     }, false)
   </script>
 </body>
