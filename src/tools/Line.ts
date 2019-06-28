@@ -31,7 +31,7 @@ class Line {
   }
 
   drawArrow () {
-    const handle = 15;
+    const handle = 8;
     const angle = 30;
     const rotaAngle = Math.atan2(this.start.y - this.end.y, this.start.x - this.end.x) * 180 / Math.PI;
     const angle1 = (rotaAngle + angle) * Math.PI / 180;
@@ -43,6 +43,8 @@ class Line {
     this.ctx.moveTo(point1.x, point1.y);
     this.ctx.lineTo(this.end.x, this.end.y);
     this.ctx.lineTo(point2.x, point2.y);
+    this.ctx.closePath();
+    this.ctx.fill();
     this.ctx.stroke();
     // new Line(this.ctx, point1, this.end);
     // new Line(this.ctx, this.end, point2);

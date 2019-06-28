@@ -85,7 +85,7 @@ class DrawingBoard {
     this.fillColor = color;
   }
 
-  redo () {
+  undo () {
     const shape: Shape = this.shapeList.pop();
     if (!shape) return;
     const shapes = [ shape ];
@@ -93,7 +93,7 @@ class DrawingBoard {
     this.redraw();
   }
 
-  undo () {
+  redo () {
     const shapes: Shape[] = this.redoShapeList.pop();
     if (!shapes) return;
     this.shapeList = this.shapeList.concat(shapes);

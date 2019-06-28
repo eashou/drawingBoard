@@ -64,7 +64,7 @@ var DrawingBoard = /** @class */ (function () {
     DrawingBoard.prototype.setFillColor = function (color) {
         this.fillColor = color;
     };
-    DrawingBoard.prototype.redo = function () {
+    DrawingBoard.prototype.undo = function () {
         var shape = this.shapeList.pop();
         if (!shape)
             return;
@@ -72,7 +72,7 @@ var DrawingBoard = /** @class */ (function () {
         this.redoShapeList.push(shapes);
         this.redraw();
     };
-    DrawingBoard.prototype.undo = function () {
+    DrawingBoard.prototype.redo = function () {
         var shapes = this.redoShapeList.pop();
         if (!shapes)
             return;
@@ -284,7 +284,7 @@ var Line = /** @class */ (function () {
         this.arrow && this.drawArrow();
     };
     Line.prototype.drawArrow = function () {
-        var handle = 15;
+        var handle = 8;
         var angle = 30;
         var rotaAngle = Math.atan2(this.start.y - this.end.y, this.start.x - this.end.x) * 180 / Math.PI;
         var angle1 = (rotaAngle + angle) * Math.PI / 180;
@@ -295,6 +295,8 @@ var Line = /** @class */ (function () {
         this.ctx.moveTo(point1.x, point1.y);
         this.ctx.lineTo(this.end.x, this.end.y);
         this.ctx.lineTo(point2.x, point2.y);
+        this.ctx.closePath();
+        this.ctx.fill();
         this.ctx.stroke();
         // new Line(this.ctx, point1, this.end);
         // new Line(this.ctx, this.end, point2);
