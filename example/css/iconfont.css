@@ -1,0 +1,64 @@
+@font-face {font-family: "iconfont";  
+  src:url('../fonts/iconfont.ttf') format('truetype'); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/  
+}  
+
+.iconfont {  
+  font-family:"iconfont" !important;  
+  font-size:16px;  
+  font-style:normal;  
+  -webkit-font-smoothing: antialiased;  
+  -webkit-text-stroke-width: 0.2px;  
+}  
+
+.iconellipse:before {
+  content: "\e609";
+}
+
+.icondash:before {
+  content: "\e60a";
+}
+
+.iconredo:before {
+  content: "\e60b";
+}
+
+.iconeraser:before {
+  content: "\e60c";
+}
+
+.iconclear:before {
+  content: "\e60d";
+}
+
+.iconline:before {
+  content: "\e60e";
+}
+
+.iconrect:before {
+  content: "\e60f";
+}
+
+.iconundo:before {
+  content: "\e610";
+}
+
+.iconmove:before {
+  content: "\e611";
+}
+
+.iconzoomin:before {
+  content: "\e612";
+}
+
+.iconpencil:before {
+  content: "\e613";
+}
+
+.icontext:before {
+  content: "\e614";
+}
+
+.iconzoomout:before {
+  content: "\e615";
+}
+

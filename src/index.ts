@@ -1,5 +1,7 @@
 'use strict';
 
+import { getStyle } from './utils/util'
+
 import Point from './tools/Point';
 import Line from './tools/Line';
 import Pencil from './tools/Pencil';
@@ -54,6 +56,7 @@ class DrawingBoard {
     this.color = options.color;
     this.fillColor = options.fillColor;
     this.zoomFator = options.zoom;
+    this._initBoard();
     this.redraw();
 
     el.addEventListener('mousedown', ev => {
@@ -67,6 +70,11 @@ class DrawingBoard {
       this.drawing(x, y);
     }, false);
     document.addEventListener('mouseup', this.drawEnd.bind(this), false);
+  }
+
+  _initBoard () {
+    this.el.width = getStyle(this.el, 'width').replace('px', '');
+    this.el.height = getStyle(this.el, 'height').replace('px', '');
   }
 
   setTool (tool: string = 'pencil') {

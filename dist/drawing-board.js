@@ -1,6 +1,7 @@
 (function(_g){(function(f){if(typeof exports==='object'&&typeof module!=='undefined'){module.exports=f()}else if(typeof define==='function'&&define.amd){define([],f.bind(_g))}else{f()}})(function(define,module,exports){var _m =(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 'use strict';
 exports.__esModule = true;
+var util_1 = require("./utils/util");
 var Point_1 = require("./tools/Point");
 var Line_1 = require("./tools/Line");
 var Pencil_1 = require("./tools/Pencil");
@@ -36,6 +37,7 @@ var DrawingBoard = /** @class */ (function () {
         this.color = options.color;
         this.fillColor = options.fillColor;
         this.zoomFator = options.zoom;
+        this._initBoard();
         this.redraw();
         el.addEventListener('mousedown', function (ev) {
             var x = Math.round(ev.offsetX / _this_1.zoomFator - _this_1.origin.x);
@@ -49,6 +51,10 @@ var DrawingBoard = /** @class */ (function () {
         }, false);
         document.addEventListener('mouseup', this.drawEnd.bind(this), false);
     }
+    DrawingBoard.prototype._initBoard = function () {
+        this.el.width = util_1.getStyle(this.el, 'width').replace('px', '');
+        this.el.height = util_1.getStyle(this.el, 'height').replace('px', '');
+    };
     DrawingBoard.prototype.setTool = function (tool) {
         if (tool === void 0) { tool = 'pencil'; }
         this.currentTool = tool;
@@ -187,7 +193,7 @@ var DrawingBoard = /** @class */ (function () {
 }());
 module.exports = DrawingBoard;
 
-},{"./tools/Ellipse":2,"./tools/Eraser":3,"./tools/Line":4,"./tools/Pencil":5,"./tools/Point":6,"./tools/Rect":7,"./tools/Text":8}],2:[function(require,module,exports){
+},{"./tools/Ellipse":2,"./tools/Eraser":3,"./tools/Line":4,"./tools/Pencil":5,"./tools/Point":6,"./tools/Rect":7,"./tools/Text":8,"./utils/util":9}],2:[function(require,module,exports){
 'use strict';
 exports.__esModule = true;
 var Ellipse = /** @class */ (function () {
@@ -385,6 +391,16 @@ var Text = /** @class */ (function () {
     return Text;
 }());
 exports["default"] = Text;
+
+},{}],9:[function(require,module,exports){
+
+function getStyle (obj, name) {
+  return (obj.currentStyle || window.getComputedStyle(obj, false))[name]
+}
+
+module.exports = {
+  getStyle
+};
 
 },{}]},{},[1]);
 var _r=_m(1);_g.DrawingBoard=_r;return _r;})})(typeof window!=='undefined'?window:(typeof global!=='undefined'?global:(typeof self!=='undefined'?self:this)));

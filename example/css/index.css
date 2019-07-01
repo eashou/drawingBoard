@@ -1,0 +1,217 @@
+@charset "UTF-8";
+/** reset.css **/
+html,
+body,
+div,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+img,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+form,
+label,
+table,
+tbody,
+thead,
+tr,
+th,
+td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-family: 'Microsoft YaHei,arial,Hiragino Sans GB,sans-serif,Helvetica Neue,Helvetica,sans-serif,Heiti SC';
+  vertical-align: baseline;
+}
+html {
+  height: 100%;
+}
+body {
+  width: 100%;
+  height: 100%;
+  background-color: #f7fafb;
+  color: #666;
+}
+:focus {
+  outline: 0;
+}
+input::-ms-clear,
+input::-ms-reveal {
+  display: none;
+}
+a {
+  color: #1b68fd;
+}
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+img,
+iframe {
+  border: none;
+  text-decoration: none;
+}
+ol,
+ul {
+  list-style: none;
+}
+input,
+textarea,
+select,
+button {
+  font-size: 100%;
+  font-family: inherit;
+  padding: 0;
+  margin: 0;
+  color: #666;
+}
+textarea {
+  resize: none;
+}
+select {
+  margin: inherit;
+  padding: 3px 0\9;
+}
+label {
+  cursor: pointer;
+}
+em {
+  font-style: normal;
+}
+::-webkit-input-placeholder {
+  color: #ddd;
+}
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: #ddd;
+}
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #ddd;
+}
+:-ms-input-placeholder {
+  color: #ddd;
+}
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.pa {
+  position: absolute;
+}
+.pv {
+  position: relative;
+}
+.inline {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  vertical-align: top;
+}
+.clear,
+.clear:after {
+  content: ' ';
+  display: block;
+  clear: both;
+}
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.i:after,
+.i:before {
+  border: 4px solid transparent;
+  border-top: 4px solid #636f7f;
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  content: ' ';
+}
+.i:before {
+  border-top-color: #c0d4e9;
+  top: 12px;
+}
+
+.drawing-board {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.board-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  vertical-align: top;
+}
+
+.board-content canvas {
+  width: 100%;
+  height: 100%;
+  background: url('../img/board-bg.png');
+}
+
+.tools {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  width: 100px;
+  background-color: #fff;
+  box-shadow: 0 0 6px #ccc;
+  font-size: 0;
+}
+
+.tools .tool {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 1px solid #fff;
+}
+
+.tools .tool.active,
+.tools .tool:hover {
+  border: 1px solid rgb(102, 255, 0);
+}
+
+.tools .tool .iconfont {
+  font-size: 28px;
+}
