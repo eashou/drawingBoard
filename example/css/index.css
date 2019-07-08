@@ -33,6 +33,7 @@ td {
   outline: 0;
   font-family: 'Microsoft YaHei,arial,Hiragino Sans GB,sans-serif,Helvetica Neue,Helvetica,sans-serif,Heiti SC';
   vertical-align: baseline;
+  user-select: none;
 }
 html {
   height: 100%;

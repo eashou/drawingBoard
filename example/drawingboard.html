@@ -16,11 +16,47 @@
 
     <div class="tools">
       <ul>
-        <li class="tool">
+        <li class="tool active" onclick="db.setTool('pencil')">
           <span class="icon iconfont">&#xe613;</span>
         </li>
-        <li class="tool" onclick="db.setTool('line')">
+        <li class="tool" onclick="db.setTool('eraser')">
+          <span class="icon iconfont">&#xe60c;</span>
+        </li>
+        <li class="tool" onclick="db.setTool('line'),db.dash = false">
           <span class="icon iconfont">&#xe60e;</span>
+        </li>
+        <li class="tool" onclick="db.setTool('line'),db.dash = true">
+          <span class="icon iconfont">&#xe60a;</span>
+        </li>
+        <li class="tool" onclick="db.setTool('line'),db.arrow = true">
+          <span class="icon iconfont">&#xe616;</span>
+        </li>
+        <li class="tool" onclick="db.setTool('text')">
+          <span class="icon iconfont">&#xe614;</span>
+        </li>
+        <li class="tool" onclick="db.setTool('rect')">
+          <span class="icon iconfont">&#xe60f;</span>
+        </li>
+        <li class="tool" onclick="db.setTool('ellipse')">
+          <span class="icon iconfont">&#xe609;</span>
+        </li>
+        <li class="tool" onclick="zoom()">
+          <span class="icon iconfont">&#xe615;</span>
+        </li>
+        <li class="tool" onclick="zoom(1)">
+          <span class="icon iconfont">&#xe612;</span>
+        </li>
+        <li class="tool" onclick="db.setTool('move')">
+          <span class="icon iconfont">&#xe611;</span>
+        </li>
+        <li class="tool" onclick="db.clear()">
+          <span class="icon iconfont">&#xe60d;</span>
+        </li>
+        <li class="tool" onclick="db.undo()">
+          <span class="icon iconfont">&#xe610;</span>
+        </li>
+        <li class="tool" onclick="db.redo()">
+          <span class="icon iconfont">&#xe60b;</span>
         </li>
       </ul>
     </div>
